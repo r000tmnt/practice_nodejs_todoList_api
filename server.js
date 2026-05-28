@@ -118,4 +118,4 @@ http.createServer((request, response) => {
             }            
             return
     }
-}).listen(process.env.port || 8080)
+}).listen(process.env.PORT || 8080)
