@@ -32,6 +32,8 @@ http.createServer((request, response) => {
                 response.writeHead(200, header)
                 response.write(JSON.stringify({ "success": true, "data": todoList }))
                 response.end()   
+            }else{
+                returnError(response, header, 404)
             }
             return
         case 'POST':
@@ -56,6 +58,8 @@ http.createServer((request, response) => {
                         returnError(response, header, 400, error)                         
                     }
                 })
+            }else{
+                returnError(response, header, 404)
             }
             return
         case 'DELETE':
@@ -80,6 +84,8 @@ http.createServer((request, response) => {
                     response.write(JSON.stringify({ "success": true, "data": todoList }))
                     response.end()                       
                 }
+            }else{
+                returnError(response, header, 404)
             }            
             return
         case 'PATCH':
@@ -107,10 +113,9 @@ http.createServer((request, response) => {
                         returnError(response, header, 400, error)                         
                     }
                 })
+            }else{
+                returnError(response, header, 404)
             }            
-            return
-        default:
-            returnError(response, header, 404)
             return
     }
 }).listen(process.env.port || 8080)
