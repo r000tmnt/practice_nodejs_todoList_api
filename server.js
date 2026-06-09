@@ -1,15 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import * as http from 'http'
+import { returnSuccess, returnError } from './responseHandler.js'
 
 const todoList = [
 
 ]
-
-const returnError = (response, header, status=404, message='Not found') => {
-    response.writeHead(status, header)
-    response.write(JSON.stringify({ "success": false, "message": message }))
-    response.end()    
-}
 
 http.createServer((request, response) => {
     const header = {
@@ -29,11 +24,9 @@ http.createServer((request, response) => {
     switch(request.method){
         case 'GET':
             if(request.url === '/todos'){
-                response.writeHead(200, header)
-                response.write(JSON.stringify({ "success": true, "data": todoList }))
-                response.end()   
+                returnSuccess(response, header, todoList) 
             }else{
-                returnError(response, header, 404)
+                returnError(response, header)
             }
             return
         case 'POST':
@@ -48,9 +41,7 @@ http.createServer((request, response) => {
                                 title: data.title
                             })
 
-                            response.writeHead(200, header)
-                            response.write(JSON.stringify({ "success": true, "data": todoList }))
-                            response.end()                                
+                            returnSuccess(response, header, todoList)                               
                         }else{
                             returnError(response, header, 400, "Data structure unmatched.")
                         }
@@ -59,33 +50,35 @@ http.createServer((request, response) => {
                     }
                 })
             }else{
-                returnError(response, header, 404)
+                returnError(response, header)
             }
             return
         case 'DELETE':
             if(request.url.includes('/todos')){
-                const id = request.url.split('/').pop()
+                request.on('end', () => {
+                    try {
+                        const data = JSON.parse(body)
 
-                if(id.includes('-')){
-                    const index = todoList.findIndex(todo => todo.id === id)
+                        if(data.title !== undefined && data.id !== undefined){
+                            const index = todoList.findIndex(todo => todo.id === data.id)
 
-                    if(index >= 0){
-                        console.log(index)
-                        todoList.splice(index, 1)
-                        response.writeHead(200, header)
-                        response.write(JSON.stringify({ "success": true, "data": todoList }))
-                        response.end()                           
-                    }else{
-                        returnError(response, header, 400, "Id not found")
+                            if(index >= 0){
+                                console.log(index)
+                                todoList.splice(index, 1)
+
+                                returnSuccess(response, header, todoList)                                     
+                            }else{
+                                returnError(response, header, 400, "Id not found")
+                            }                         
+                        }else{
+                            returnError(response, header, 400, "Data structure unmatched.")
+                        }
+                    } catch (error) {
+                        returnError(response, header, 400, error)                         
                     }
-                }else{
-                    todoList.splice(0)
-                    response.writeHead(200, header)
-                    response.write(JSON.stringify({ "success": true, "data": todoList }))
-                    response.end()                       
-                }
+                })
             }else{
-                returnError(response, header, 404)
+                returnError(response, header)
             }            
             return
         case 'PATCH':
@@ -100,9 +93,7 @@ http.createServer((request, response) => {
                             if(index >= 0){
                                 todoList[index].title = data.title
 
-                                response.writeHead(200, header)
-                                response.write(JSON.stringify({ "success": true, "data": todoList }))
-                                response.end()                                       
+                                returnSuccess(response, header, todoList)                                  
                             }else{
                                 returnError(response, header, 400, "Id not found")
                             }                         
@@ -114,7 +105,7 @@ http.createServer((request, response) => {
                     }
                 })
             }else{
-                returnError(response, header, 404)
+                returnError(response, header)
             }            
             return
     }
