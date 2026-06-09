@@ -1,0 +1,66 @@
+{
+  "info": {
+    "_postman_id": "ebee25b1-e7bf-476c-af0b-0051eb557778",
+    "name": "todoList",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27831434",
+    "_collection_link": "https://go.postman.co/collection/27831434-ebee25b1-e7bf-476c-af0b-0051eb557778?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "todos_get",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "todos_post",
+      "request": {
+        "method": "POST",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "todos_delete",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"id\": \"3e840ad4-9dea-4ad2-b7e0-e2574fd59e5d\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "127.0.0.1:8080/todos/",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8080",
+          "path": [
+            "todos",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "todos_patch",
+      "request": {
+        "method": "PATCH",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
