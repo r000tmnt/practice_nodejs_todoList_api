@@ -59,7 +59,7 @@ http.createServer((request, response) => {
                     try {
                         const data = JSON.parse(body)
 
-                        if(data.title !== undefined && data.id !== undefined){
+                        if(data.id !== undefined){
                             const index = todoList.findIndex(todo => todo.id === data.id)
 
                             if(index >= 0){
